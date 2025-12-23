@@ -156,7 +156,7 @@ const allContent: Content[] = [
     director: "Джеймс Ван",
     actors: ["Вера Фармига", "Патрик Уилсон", "Лили Тэйлор"],
     type: "movie",
-    watchUrl: "",
+    watchUrl: "https://kinogo.inc/films/3765-zaklyatie-hd-v13.html",
   },
   {
     id: "6",
@@ -173,7 +173,7 @@ const allContent: Content[] = [
     director: "Джеймс Кэмерон",
     actors: ["Леонардо ДиКаприо", "Кейт Уинслет", "Билли Зейн"],
     type: "movie",
-    watchUrl: "",
+    watchUrl: "https://kinogo.online/filmy/28511-titanik.html",
   },
   {
     id: "7",
@@ -190,7 +190,7 @@ const allContent: Content[] = [
     director: "Гай Ричи",
     actors: ["Мэттью МакКонахи", "Чарли Ханнэм", "Хью Грант"],
     type: "movie",
-    watchUrl: "",
+    watchUrl: "https://kinogo.online/filmy/20913-dzhentlmeny.html",
   },
   {
     id: "8",
@@ -207,7 +207,7 @@ const allContent: Content[] = [
     director: "Мартин Скорсезе",
     actors: ["Леонардо ДиКаприо", "Марк Руффало", "Бен Кингсли"],
     type: "movie",
-    watchUrl: "",
+    watchUrl: "https://kinogo.inc/films/1518-ostrov-proklyatyh-hd-v2.html",
   },
   {
     id: "9",
@@ -377,7 +377,7 @@ const allContent: Content[] = [
     director: "Корин Харди",
     actors: ["Демиан Бичир", "Тайза Ладол", "Палатина Максимова"],
     type: "movie",
-    watchUrl: "",
+    watchUrl: "https://kinogo.fm/535-prizrak-monahini-iz-borli-2021.html",
   },
   {
     id: "19",
@@ -394,7 +394,7 @@ const allContent: Content[] = [
     director: "Артюр Шульмейстер",
     actors: ["Жан Рено", "Питер Селлерс", "Жан-Пьер Кастельнау"],
     type: "movie",
-    watchUrl: "",
+    watchUrl: "https://kinogo.inc/films/5328-poltora-shpiona-2016-hd-dixitv2-bettertv1-hdwt4-v72.html",
   },
   {
     id: "20",
@@ -411,7 +411,7 @@ const allContent: Content[] = [
     director: "Майкл Бэй",
     actors: ["Уилл Смит", "Мартин Лоуренс", "Йентл Пинкус"],
     type: "movie",
-    watchUrl: "",
+    watchUrl: "https://kinogo.inc/films/1420-plohie-parni-navsegda-2020-hd-wombtv3-bettertv13-v172.html",
   },
   {
     id: "21",
@@ -445,7 +445,7 @@ const allContent: Content[] = [
     director: "Хаяо Миядзаки",
     actors: ["Фиона Гласс", "Кристиан Бэйл", "Майкл Гамбон"],
     type: "movie",
-    watchUrl: "",
+    watchUrl: "https://kinogo.inc/anime/11477-hodyachiy-zamok-hd-v7.html",
   },
   {
     id: "23",
@@ -462,7 +462,7 @@ const allContent: Content[] = [
     director: "Фредерик Вульф",
     actors: ["Йэннс Триплеси", "Рене Риверс", "Йозеф Криселл"],
     type: "movie",
-    watchUrl: "",
+    watchUrl: "https://kinogo.inc/films/14074-13-minut-film-2024.html",
   },
   // Сериалы
   {
@@ -480,7 +480,7 @@ const allContent: Content[] = [
     director: "Дэвид Бениофф, Д.Б. Вайсс",
     actors: ["Эмилия Кларк", "Кит Харингтон", "Питер Динклэйдж"],
     type: "series",
-    watchUrl: "",
+    watchUrl: "https://kinogo.bike/25524-igra-prestolow-6-season.html",
   },
   {
     id: "s2",
@@ -497,7 +497,7 @@ const allContent: Content[] = [
     director: "Братья Даффер",
     actors: ["Милли Бобби Браун", "Финн Вулфард", "Вайнона Райдер"],
     type: "series",
-    watchUrl: "",
+    watchUrl: "https://kinogo.inc/fantasy/674-ochen-strannye-dela-2016.html",
   },
   {
     id: "s3",
@@ -514,7 +514,7 @@ const allContent: Content[] = [
     director: "Винс Гиллиган",
     actors: ["Брайан Крэнстон", "Аарон Пол", "Анна Ганн"],
     type: "series",
-    watchUrl: "",
+    watchUrl: "https://kinogo.inc/crime/214-vo-vse-tyazhkie-2024.html",
   },
   {
     id: "s4",
@@ -531,7 +531,7 @@ const allContent: Content[] = [
     director: "Марк Гэтисс, Стивен Моффат",
     actors: ["Бенедикт Камбербэтч", "Мартин Фриман", "Эндрю Скотт"],
     type: "series",
-    watchUrl: "",
+    watchUrl: "https://kinogo.online/serialy/35784-sherlok.html",
   },
   {
     id: "s5",
@@ -548,7 +548,7 @@ const allContent: Content[] = [
     director: "Дэвид Крейн, Марта Кауфман",
     actors: ["Дженнифер Энистон", "Кортни Кокс", "Мэттью Перри"],
     type: "series",
-    watchUrl: "",
+    watchUrl: "https://kinogo.online/serialy/37065-druzja.html",
   },
   {
     id: "s6",
@@ -565,7 +565,7 @@ const allContent: Content[] = [
     director: "Хван Дон-хёк",
     actors: ["Ли Чжун-джэ", "Пак Хэ-су", "Чо Сан-хо"],
     type: "series",
-    watchUrl: "",
+    watchUrl: "https://kinogo.online/zarubezhnye-serialy/46293-igra-v-kalmara.html",
   },
   {
     id: "s7",
@@ -582,7 +582,7 @@ const allContent: Content[] = [
     director: "Хван Дон-хёк",
     actors: ["Ли Чжун-джэ", "Т.О.П", "Ли Бён-хо"],
     type: "series",
-    watchUrl: "",
+    watchUrl: "https://kinogo.online/zarubezhnye-serialy/46293-igra-v-kalmara.html",
   },
   {
     id: "s8",
@@ -599,7 +599,7 @@ const allContent: Content[] = [
     director: "Юлия Вишневская",
     actors: ["Виктория Полина", "Всеволод Воробьёв", "Артем Сафонов"],
     type: "series",
-    watchUrl: "",
+    watchUrl: "https://kinogo.inc/drama/16804-zimorodok-hdtv-v2-vs12-db8-mg18-kz13-kzt4-io6.html",
   },
   {
     id: "s9",
@@ -616,7 +616,7 @@ const allContent: Content[] = [
     director: "Джемиль Текин",
     actors: ["Бушра Сайилар", "Энгин Шеналь", "Берн Свенсон"],
     type: "series",
-    watchUrl: "",
+    watchUrl: "https://kinogo.online/serialy/37109-chernaja-ljubov.html",
   },
 ];
 
