@@ -1,0 +1,9 @@
+{
+    "name": "cinemagic-root",
+    "private": true,
+    "scripts": {
+        "build": "npm run build --prefix front",
+        "dev": "npm run dev --prefix front",
+        "install": "npm install --prefix front"
+    }
+}

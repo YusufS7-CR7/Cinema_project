@@ -2,13 +2,10 @@ import { useState, useRef, useEffect } from "react";
 import { QuestionnaireStep } from "./components/QuestionnaireStep";
 import { MovieCard } from "./components/MovieCard";
 import { MovieDetailModal } from "./components/MovieDetailModal";
-import { AuthModal } from "./components/AuthModal";
-import { LoginModal } from "./components/LoginModal";
-import { SignUpModal } from "./components/SignUpModal";
-import { ChevronRight, ChevronLeft, Sun, Moon, LogIn, LogOut, User, ListFilter, Search, X } from "lucide-react";
+import { ChevronRight, ChevronLeft, Sun, Moon, ListFilter, Search, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { getCurrentUser, signOut, onAuthStateChange } from "../lib/supabase";
 
+// из чего состоят фильмы/сериалы
 interface Content {
   id: string;
   title: string;
@@ -27,8 +24,8 @@ interface Content {
   watchUrl: string;
 }
 
- 
 
+// визуал жанров
 const genreOptions = [
   {
     id: "action",
@@ -72,6 +69,7 @@ const genreOptions = [
   },
 ];
 
+// все фильмы и сериалы
 const allContent: Content[] = [
   {
     id: "1",
@@ -175,6 +173,7 @@ const allContent: Content[] = [
     type: "movie",
     watchUrl: "https://kinogo.online/filmy/28511-titanik.html",
   },
+  // image
   {
     id: "7",
     title: "Джентльмены",
@@ -453,7 +452,7 @@ const allContent: Content[] = [
     year: 2023,
     genre: "Триллер",
     rating: 6.5,
-    image: "https://www.film.ru/sites/default/files/styles/thumb_260x400/public/movies/posters/1611122-2261005.jpeg",
+    image: "https://avatars.mds.yandex.net/get-kinopoisk-image/4486362/5dd06712-9d49-4ad1-a18e-9dfa36d9b94c/600x900",
     duration: "107 мин",
     country: "Швейцария",
     genres: ["thriller", "disaster"],
@@ -618,7 +617,400 @@ const allContent: Content[] = [
     type: "series",
     watchUrl: "https://kinogo.online/serialy/37109-chernaja-ljubov.html",
   },
+  {
+    id: "24",
+    title: "Железный человек",
+    year: 2008,
+    genre: "Боевик",
+    rating: 7.9,
+    image: "https://preview.redd.it/i-was-watching-iron-man-1-the-kicker-for-the-mcu-last-night-v0-xdzee1uon7de1.jpeg?width=640&crop=smart&auto=webp&s=e911e6bc70d5799ef44fb575c72e962b0d4ee783",
+    duration: "126 мин",
+    country: "США",
+    genres: ["action", "scifi", "adventure"],
+    description: "Миллиардер-изобретатель Тони Старк попадает в плен, где создает высокотехнологичный костюм-броню, чтобы сбежать. Вернувшись домой, он решает использовать свои технологии для борьбы со злом.",
+    views: 12000000,
+    director: "Джон Фавро",
+    actors: ["Роберт Дауни мл.", "Гвинет Пэлтроу", "Джефф Бриджес"],
+    type: "movie",
+    watchUrl: "https://kinogo.tm/filmy/6262-zheleznyj-chelovek.html",
+  },
+  {
+    id: "25",
+    title: "Первый мститель",
+    year: 2011,
+    genre: "Боевик",
+    rating: 6.9,
+    image: "https://a113.ru/upload/resize_cache/iblock/4e4/ghzk2vaatzkffzrkeukbntyaye0pt9ba/270_404_2/cover13d_w820.jpg",
+    duration: "124 мин",
+    country: "США",
+    genres: ["action", "scifi", "adventure"],
+    description: "Стив Роджерс добровольно участвует в экспериментальной программе, которая превращает его в суперсолдата, известного как Капитан Америка.",
+    views: 8500000,
+    director: "Джо Джонстон",
+    actors: ["Крис Эванс", "Хейли Этвелл", "Себастиан Стэн"],
+    type: "movie",
+    watchUrl: "https://kinogo.inc/films/102-pervyy-mstitel-2024.html",
+  },
+  {
+    id: "26",
+    title: "Тор",
+    year: 2011,
+    genre: "Фэнтези",
+    rating: 7.0,
+    image: "https://upload.wikimedia.org/wikipedia/ru/thumb/9/92/%D0%A2%D0%BE%D1%80_%D0%9B%D1%8E%D0%B1%D0%BE%D0%B2%D1%8C_%D0%B8_%D0%B3%D1%80%D0%BE%D0%BC_%D0%BF%D0%BE%D1%81%D1%82%D0%B5%D1%80.jpg/864px-%D0%A2%D0%BE%D1%80_%D0%9B%D1%8E%D0%B1%D0%BE%D0%B2%D1%8C_%D0%B8_%D0%B3%D1%80%D0%BE%D0%BC_%D0%BF%D0%BE%D1%81%D1%82%D0%B5%D1%80.jpg",
+    duration: "115 мин",
+    country: "США",
+    genres: ["fantasy", "action", "adventure"],
+    description: "Могучий, но высокомерный воин Тор изгнан из Асгарда на Землю, где он должен научиться смирению и защитить человечество от своего брата Локи.",
+    views: 9000000,
+    director: "Кеннет Брана",
+    actors: ["Крис Хемсворт", "Натали Портман", "Том Хиддлстон"],
+    type: "movie",
+    watchUrl: "https://kinogo.tm/filmy/7246-tor.html",
+  },
+  {
+    id: "27",
+    title: "Черная Вдова",
+    year: 2021,
+    genre: "Боевик",
+    rating: 6.7,
+    image: "https://upload.wikimedia.org/wikipedia/ru/thumb/a/a1/Black_Widow_logo.jpg/834px-Black_Widow_logo.jpg",
+    duration: "134 мин",
+    country: "США",
+    genres: ["action", "scifi", "adventure"],
+    description: "Наташа Романофф сталкивается с темными сторонами своей биографии, когда вскрывается опасный заговор, связанный с ее прошлым.",
+    views: 11000000,
+    director: "Кейт Шортланд",
+    actors: ["Скарлетт Йоханссон", "Флоренс Пью", "Дэвид Харбор"],
+    type: "movie",
+    watchUrl: "https://kinogo.inc/films/1240-chernaya-vdova-2021-hd-catstv1-v482.html",
+  },
+  {
+    id: "28",
+    title: "Доктор Стрэндж",
+    year: 2016,
+    genre: "Фантастика",
+    rating: 7.5,
+    image: "https://upload.wikimedia.org/wikipedia/ru/c/c7/Doctor_Strange_poster.jpg",
+    duration: "115 мин",
+    country: "США",
+    genres: ["scifi", "fantasy", "action"],
+    description: "Талантливый нейрохирург Стивен Стрэндж теряет чувствительность рук после аварии и отправляется на поиски исцеления, обретая магические способности.",
+    views: 13000000,
+    director: "Скотт Дерриксон",
+    actors: ["Бенедикт Камбербэтч", "Тильда Суинтон", "Мадс Миккельсен"],
+    type: "movie",
+    watchUrl: "https://kinogo.inc/films/92-doktor-strendzh-hd-v15.html",
+  },
+  {
+    id: "29",
+    title: "Черная Пантера",
+    year: 2018,
+    genre: "Боевик",
+    rating: 7.3,
+    image: "https://upload.wikimedia.org/wikipedia/ru/0/0c/Black_Panther_film_poster.jpg",
+    duration: "134 мин",
+    country: "США",
+    genres: ["action", "scifi", "adventure"],
+    description: "Т'Чалла возвращается домой в изолированную технологичную африканскую страну Ваканду, чтобы занять трон, но сталкивается с могущественным врагом.",
+    views: 15000000,
+    director: "Райан Куглер",
+    actors: ["Чедвик Боузман", "Майкл Б. Джордан", "Лупита Нионго"],
+    type: "movie",
+    watchUrl: "https://kinogo.inc/films/248-chernaya-pantera-film-hdtv-v38-dc42.html",
+  },
+  {
+    id: "30",
+    title: "Стражи Галактики",
+    year: 2014,
+    genre: "Фантастика",
+    rating: 8.0,
+    image: "https://upload.wikimedia.org/wikipedia/ru/a/a7/Guardians_of_the_Galaxy_film.jpg",
+    duration: "121 мин",
+    country: "США",
+    genres: ["scifi", "comedy", "action"],
+    description: "Отважный путешественник Питер Квилл объединяется с группой разношерстных изгоев, чтобы остановить злодея, угрожающего всей Вселенной.",
+    views: 14000000,
+    director: "Джеймс Ганн",
+    actors: ["Крис Пратт", "Зои Салдана", "Брэдли Купер"],
+    type: "movie",
+    watchUrl: "https://kinogo.inc/films/110-strazhi-galaktiki-2026.html",
+  },
+  {
+    id: "31",
+    title: "Безумный Макс: Дорога ярости",
+    year: 2015,
+    genre: "Боевик",
+    rating: 8.1,
+    image: "https://upload.wikimedia.org/wikipedia/ru/6/6e/Mad_Max_Fury_Road.jpg",
+    duration: "120 мин",
+    country: "Австралия, США",
+    genres: ["action", "scifi", "thriller"],
+    description: "В постапокалиптическом мире Макс объединяется с воительницей Фуриосой, чтобы сбежать от деспотичного тирана через бескрайнюю пустыню.",
+    views: 10000000,
+    director: "Джордж Миллер",
+    actors: ["Том Харди", "Шарлиз Терон", "Николас Холт"],
+    type: "movie",
+    watchUrl: "https://kinogo.tm/filmy/23700-bezumnyj-maks-doroga-jarosti.html",
+  },
+  {
+    id: "32",
+    title: "Джон Уик",
+    year: 2014,
+    genre: "Боевик",
+    rating: 7.4,
+    image: "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/5ab427c8-4a7d-4766-abf9-a9748a69dbf4/220x330",
+    duration: "101 мин",
+    country: "США",
+    genres: ["action", "thriller"],
+    description: "Бывший наемный убийца Джон Уик вынужден вернуться в дело после того, как сын гангстера крадет его машину и убивает собаку — последний подарок покойной жены.",
+    views: 9500000,
+    director: "Чад Стахелски",
+    actors: ["Киану Ривз", "Микаэл Нюквист", "Элфи Аллен"],
+    type: "movie",
+    watchUrl: "https://kinogo.tm/filmy/15116-dzhon-uik.html",
+  },
+  {
+    id: "33",
+    title: "Миссия невыполнима: Последствия",
+    year: 2018,
+    genre: "Боевик",
+    rating: 7.7,
+    image: "https://avatars.mds.yandex.net/get-kinopoisk-image/1900788/47925a3e-b22a-4d69-a597-c401b2e566c2/orig",
+    duration: "147 мин",
+    country: "США",
+    genres: ["action", "thriller", "adventure"],
+    description: "Итан Хант и его команда вынуждены мчаться наперегонки со временем после того, как одна из их миссий идет не по плану.",
+    views: 11500000,
+    director: "Кристофер Маккуорри",
+    actors: ["Том Круз", "Генри Кавилл", "Ребекка Фергюсон"],
+    type: "movie",
+    watchUrl: "https://kinogo.tm/filmy/11081-missija-nevypolnima-posledstvija.html",
+  },
+  {
+    id: "34",
+    title: "Гладиатор",
+    year: 2000,
+    genre: "Боевик",
+    rating: 8.5,
+    image: "https://avatars.mds.yandex.net/get-kinopoisk-image/1600647/047f45d3-5f37-4cf1-8e58-8fa7f0b61ba1/orig",
+    duration: "155 мин",
+    country: "США, Великобритания",
+    genres: ["action", "drama", "history"],
+    description: "Преданный военачальник Максимус становится рабом-гладиатором и прокладывает себе путь к арене Колизея, чтобы отомстить императору, убившему его семью.",
+    views: 16000000,
+    director: "Ридли Скотт",
+    actors: ["Рассел Кроу", "Хоакин Феникс", "Конни Нильсен"],
+    type: "movie",
+    watchUrl: "https://kinogo.tm/filmy/12678-gladiator.html",
+  },
+  {
+    id: "35",
+    title: "Матрица: Воскрешение",
+    year: 2021,
+    genre: "Фантастика",
+    rating: 5.7,
+    image: "https://avatars.mds.yandex.net/get-kinopoisk-image/1898899/f71f55b2-0a74-4a9e-b9a2-7369eccbb3a3/600x900",
+    duration: "148 мин",
+    country: "США",
+    genres: ["scifi", "action"],
+    description: "Нео живет обычной жизнью в Сан-Франциско, пока Морфеус не дает ему синюю таблетку и не открывает его разум для мира Матрицы.",
+    views: 7000000,
+    director: "Лана Вачовски",
+    actors: ["Киану Ривз", "Кэрри-Энн Мосс", "Яхья Абдул-Матин II"],
+    type: "movie",
+    watchUrl: "https://kinogo.tm/filmy/47227-matrica-voskreshenie.html",
+  },
+  {
+    id: "36",
+    title: "Топ Ган: Маверик",
+    year: 2022,
+    genre: "Боевик",
+    rating: 8.3,
+    image: "https://upload.wikimedia.org/wikipedia/ru/7/7d/Top_Gun-_Maverick.jpg",
+    duration: "131 мин",
+    country: "США",
+    genres: ["action", "drama"],
+    description: "После более чем 30 лет службы Маверик возвращается в школу Топ Ган, чтобы подготовить отряд молодых пилотов к опасной миссии.",
+    views: 14500000,
+    director: "Джозеф Косински",
+    actors: ["Том Круз", "Майлз Теллер", "Дженнифер Коннелли"],
+    type: "movie",
+    watchUrl: "https://kinogo.tm/filmy/48375-top-gan-mjeverik.html",
+  },
+  {
+    id: "37",
+    title: "Железный человек 2",
+    year: 2010,
+    genre: "Боевик",
+    rating: 7.0,
+    image: "https://avatars.mds.yandex.net/get-kinopoisk-image/1629390/ed4b6bbb-f755-4977-bf33-005d2c30f67f/220x330",
+    duration: "124 мин",
+    country: "США",
+    genres: ["action", "scifi", "adventure"],
+    description: "Мир уже знает, что миллионер Тони Старк — это Железный человек. Под давлением правительства, прессы и общественности Тони не хочет делиться секретами своей технологии.",
+    views: 10000000,
+    director: "Джон Фавро",
+    actors: ["Роберт Дауни мл.", "Гвинет Пэлтроу", "Дон Чидл"],
+    type: "movie",
+    watchUrl: "https://kinogo.inc/films/98-zheleznyy-chelovek-2-2026.html",
+  },
+  {
+    id: "38",
+    title: "Тор 2: Царство тьмы",
+    year: 2013,
+    genre: "Фэнтези",
+    rating: 7.0,
+    image: "https://upload.wikimedia.org/wikipedia/ru/0/04/Thor_The_Dark_World.jpg",
+    duration: "112 мин",
+    country: "США",
+    genres: ["fantasy", "action", "adventure"],
+    description: "Тору предстоит защитить Землю и Девять миров от темной силы, которая старше самой Вселенной.",
+    views: 8000000,
+    director: "Алан Тейлор",
+    actors: ["Крис Хемсворд", "Натали Портман", "Том Хиддлстон"],
+    type: "movie",
+    watchUrl: "https://kinogo.tm/filmy/14175-tor-2-carstvo-tmy.html",
+  },
+  {
+    id: "39",
+    title: "Первый мститель: Другая война",
+    year: 2014,
+    genre: "Боевик",
+    rating: 7.7,
+    image: "https://avatars.mds.yandex.net/get-kinopoisk-image/1777765/2757aba0-03b4-4412-9ab9-bf6129da4e20/orig",
+    duration: "136 мин",
+    country: "США",
+    genres: ["action", "scifi", "thriller"],
+    description: "После событий в Нью-Йорке Стив Роджерс живет в Вашингтоне и пытается приспособиться к современному миру.",
+    views: 9500000,
+    director: "Энтони Руссо, Джо Руссо",
+    actors: ["Крис Эванс", "Скарлетт Йоханссон", "Энтони Маки"],
+    type: "movie",
+    watchUrl: "https://kinogo.inc/films/114-pervyy-mstitel-drugaya-voyna-2014-hdtv-v15.html",
+  },
+  {
+    id: "40",
+    title: "Мстители: Эра Альтрона",
+    year: 2015,
+    genre: "Боевик",
+    rating: 7.3,
+    image: "https://avatars.mds.yandex.net/get-kinopoisk-image/1900788/881abd28-a361-4a23-916a-3e2cc781ba83/220x330",
+    duration: "141 мин",
+    country: "США",
+    genres: ["action", "scifi", "adventure"],
+    description: "Когда Тони Старк пытается запустить миротворческую программу, все идет наперекосяк.",
+    views: 15000000,
+    director: "Джосс Уидон",
+    actors: ["Роберт Дауни мл.", "Крис Эванс", "Марк Руффало"],
+    type: "movie",
+    watchUrl: "https://kinogo.inc/films/36-mstiteli-era-altrona-2015-hdtds.html",
+  },
+  {
+    id: "41",
+    title: "Человек-муравей",
+    year: 2015,
+    genre: "Боевик",
+    rating: 7.3,
+    image: "https://avatars.mds.yandex.net/get-kinopoisk-image/1599028/427ee275-67c0-4a37-b10a-66ca1e4197d5/220x330",
+    duration: "117 мин",
+    country: "США",
+    genres: ["action", "scifi", "adventure", "comedy"],
+    description: "Скотт Лэнг должен научиться быть героем и помочь своему наставнику доктору Хэнку Пиму защитить секрет костюма Человека-муравья.",
+    views: 7000000,
+    director: "Пейтон Рид",
+    actors: ["Пол Радд", "Майкл Дуглас", "Эванджелин Лилли"],
+    type: "movie",
+    watchUrl: "https://kinogo.inc/films/15871-chelovek-muravey-v23.html",
+  },
+  {
+    id: "42",
+    title: "Первый мститель: Противостояние",
+    year: 2016,
+    genre: "Боевик",
+    rating: 7.8,
+    image: "https://upload.wikimedia.org/wikipedia/ru/b/b5/Captain_America_Civil_War.jpg",
+    duration: "147 мин",
+    country: "США",
+    genres: ["action", "scifi", "adventure"],
+    description: "Мстители оказываются вовлечены в конфликт между правительством, желающим контролировать их деятельность, и своим стремлением защищать мир.",
+    views: 12000000,
+    director: "Энтони Руссо, Джо Руссо",
+    actors: ["Крис Эванс", "Роберт Дауни мл.", "Скарлетт Йоханссон"],
+    type: "movie",
+    watchUrl: "https://kinogo.inc/films/115-pervyy-mstitel-protivostoyanie-2016-hd-v28.html",
+  },
+  {
+    id: "43",
+    title: "Стражи Галактики. Часть 2",
+    year: 2017,
+    genre: "Боевик",
+    rating: 7.6,
+    image: "https://ru-images.kinorium.com/movie/1080/776628.jpg?1678574770",
+    duration: "136 мин",
+    country: "США",
+    genres: ["action", "scifi", "adventure", "comedy"],
+    description: "Команда Стражей продолжает свое путешествие по космосу, пытаясь разгадать тайну истинного происхождения Питера Квилла.",
+    views: 11000000,
+    director: "Джеймс Ганн",
+    actors: ["Крис Пратт", "Зои Салдана", "Дэйв Батиста"],
+    type: "movie",
+    watchUrl: "https://kinogo.inc/films/110-strazhi-galaktiki-2026.html",
+  },
+  {
+    id: "44",
+    title: "Тор: Рагнарёк",
+    year: 2017,
+    genre: "Боевик",
+    rating: 7.9,
+    image: "https://upload.wikimedia.org/wikipedia/ru/5/59/%D0%A2%D0%BE%D1%80_%D0%A0%D0%B0%D0%B3%D0%BD%D0%B0%D1%80%D1%91%D0%BA_%D0%BF%D0%BE%D1%81%D1%82%D0%B5%D1%80.jpg",
+    duration: "130 мин",
+    country: "США",
+    genres: ["action", "scifi", "adventure", "comedy"],
+    description: "Тор должен остановить Хелу и предотвратить Рагнарек — уничтожение его родного Асгарда.",
+    views: 13000000,
+    director: "Тайка Вайтити",
+    actors: ["Крис Хемсворт", "Том Хиддлстон", "Кейт Бланшетт"],
+    type: "movie",
+    watchUrl: "https://ru-kinogo.net/982-tor-3-ragnarek-2017.html",
+  },
+  {
+    id: "45",
+    title: "Черная Пантера: Ваканда навеки",
+    year: 2022,
+    genre: "Боевик",
+    rating: 6.7,
+    image: "https://upload.wikimedia.org/wikipedia/ru/thumb/3/3b/Black_Panther_Wakanda_Forever_poster.jpg/960px-Black_Panther_Wakanda_Forever_poster.jpg",
+    duration: "161 мин",
+    country: "США",
+    genres: ["action", "scifi", "adventure", "drama"],
+    description: "Жители Ваканды борются за защиту своей нации от вмешательства мировых держав после смерти короля Т’Чаллы.",
+    views: 9000000,
+    director: "Райан Куглер",
+    actors: ["Летишиа Райт", "Лупита Нионго", "Данай Гурира"],
+    type: "movie",
+    watchUrl: "https://w.kinogo.fm/815-chernaja-pantera-2-vakanda-naveki-2022.html",
+  },
+  {
+    id: "46",
+    title: "Доктор Стрэндж: В мультивселенной безумия",
+    year: 2022,
+    genre: "Боевик",
+    rating: 6.9,
+    image: "https://upload.wikimedia.org/wikipedia/ru/archive/7/77/20220406163705%21%D0%94%D0%BE%D0%BA%D1%82%D0%BE%D1%80_%D0%A1%D1%82%D1%80%D1%8D%D0%BD%D0%B4%D0%B6_%D0%92_%D0%BC%D1%83%D0%BB%D1%8C%D1%82%D0%B8%D0%B2%D1%81%D0%B5%D0%BB%D0%B5%D0%BD%D0%BD%D0%BE%D0%B9_%D0%B1%D0%B5%D0%B7%D1%83%D0%BC%D0%B8%D1%8F_%D1%82%D0%B8%D0%B7%D0%B5%D1%80_%D0%BF%D0%BE%D1%81%D1%82%D0%B5%D1%80.jpeg",
+    duration: "126 мин",
+    country: "США",
+    genres: ["action", "scifi", "adventure", "fantasy"],
+    description: "Стивен Стрэндж отправляется в путешествие по мультивселенной, чтобы спасти девушку по имени Америка Чавес.",
+    views: 10000000,
+    director: "Сэм Рэйми",
+    actors: ["Бенедикт Камбербэтч", "Элизабет Олсен", "Чиветел Эджиофор"],
+    type: "movie",
+    watchUrl: "https://kinogo.inc/films/3505-doktor-strendzh-2-v-multivselennoy-bezumiya-2022-hdtv2-v80.html",
+  },
 ];
+
+// первый мститель
 
 const questions = [
   {
@@ -628,41 +1020,22 @@ const questions = [
   },
 ];
 
+// Основное приложение
 export default function App() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [selectedContent, setSelectedContent] = useState<Content | null>(null);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [user, setUser] = useState<{ email: string; name: string } | null>(null);
   const [contentType, setContentType] = useState<"all" | "movie" | "series">("movie");
   const [minRating, setMinRating] = useState<number>(0);
   const [showRatingFilter, setShowRatingFilter] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showSignUpModal, setShowSignUpModal] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  // Проверка пользователя при загрузке и слушание изменений аутентификации
-  useEffect(() => {
-    const checkUser = async () => {
-      const { user } = await getCurrentUser();
-      if (user) {
-        setCurrentUser(user);
-      }
-    };
-    checkUser();
 
-    const unsubscribe = onAuthStateChange((user) => {
-      setCurrentUser(user);
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   // Закрытие поиска при клике вне него
   useEffect(() => {
@@ -679,8 +1052,8 @@ export default function App() {
   // Фильтрация результатов поиска
   const searchResults = searchQuery.trim()
     ? allContent.filter((item) =>
-        item.title.toLowerCase().startsWith(searchQuery.toLowerCase())
-      )
+      item.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+    )
     : [];
 
   const toggleTheme = () => {
@@ -717,15 +1090,6 @@ export default function App() {
     setShowResults(false);
   };
 
-  const handleLogin = (email: string, name: string) => {
-    setUser({ email, name });
-    setShowAuthModal(false);
-  };
-
-  const handleLogout = () => {
-    setUser(null);
-  };
-
   const filteredContent = allContent
     .filter((item) => {
       // Фильтрация по типу контента
@@ -756,22 +1120,21 @@ export default function App() {
             >
               Cinemagic
             </h1>
-            
+
             <nav className="hidden md:flex gap-6 items-center">
               <button
                 onClick={() => {
                   setContentType("movie");
                   setShowResults(true);
                 }}
-                className={`${
-                  contentType === "movie" && showResults
-                    ? theme === "dark"
-                      ? "text-yellow-500"
-                      : "text-yellow-600"
-                    : theme === "dark"
+                className={`${contentType === "movie" && showResults
+                  ? theme === "dark"
+                    ? "text-yellow-500"
+                    : "text-yellow-600"
+                  : theme === "dark"
                     ? "text-white/70"
                     : "text-gray-600"
-                } hover:${theme === "dark" ? "text-white" : "text-gray-900"} transition-colors`}
+                  } hover:${theme === "dark" ? "text-white" : "text-gray-900"} transition-colors`}
               >
                 Фильмы
               </button>
@@ -780,33 +1143,30 @@ export default function App() {
                   setContentType("series");
                   setShowResults(true);
                 }}
-                className={`${
-                  contentType === "series" && showResults
-                    ? theme === "dark"
-                      ? "text-yellow-500"
-                      : "text-yellow-600"
-                    : theme === "dark"
+                className={`${contentType === "series" && showResults
+                  ? theme === "dark"
+                    ? "text-yellow-500"
+                    : "text-yellow-600"
+                  : theme === "dark"
                     ? "text-white/70"
                     : "text-gray-600"
-                } hover:${theme === "dark" ? "text-white" : "text-gray-900"} transition-colors`}
+                  } hover:${theme === "dark" ? "text-white" : "text-gray-900"} transition-colors`}
               >
                 Сериалы
               </button>
               <div className="relative">
                 <button
                   onClick={() => setShowRatingFilter(!showRatingFilter)}
-                  className={`flex items-center gap-2 ${
-                    theme === "dark" ? "text-white/70 hover:text-white" : "text-gray-600 hover:text-gray-900"
-                  } transition-colors`}
+                  className={`flex items-center gap-2 ${theme === "dark" ? "text-white/70 hover:text-white" : "text-gray-600 hover:text-gray-900"
+                    } transition-colors`}
                 >
                   <ListFilter className="w-4 h-4" />
                   Рейтинг
                 </button>
                 {showRatingFilter && (
                   <div
-                    className={`absolute top-full right-0 mt-2 ${
-                      theme === "dark" ? "bg-zinc-800" : "bg-white"
-                    } rounded-lg shadow-xl p-4 w-64 z-50`}
+                    className={`absolute top-full right-0 mt-2 ${theme === "dark" ? "bg-zinc-800" : "bg-white"
+                      } rounded-lg shadow-xl p-4 w-64 z-50`}
                   >
                     <label className={`block text-sm mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
                       Минимальный рейтинг: {minRating.toFixed(1)}
@@ -825,9 +1185,8 @@ export default function App() {
               </div>
               <button
                 onClick={handleReset}
-                className={`${
-                  theme === "dark" ? "text-white/70 hover:text-white" : "text-gray-600 hover:text-gray-900"
-                } transition-colors`}
+                className={`${theme === "dark" ? "text-white/70 hover:text-white" : "text-gray-600 hover:text-gray-900"
+                  } transition-colors`}
               >
                 Выбор жанров
               </button>
@@ -836,9 +1195,8 @@ export default function App() {
             {/* Поиск */}
             <div ref={searchRef} className="hidden md:flex flex-1 max-w-md mx-6 relative">
               <div
-                className={`flex items-center gap-2 w-full px-4 py-2 rounded-lg ${
-                  theme === "dark" ? "bg-zinc-800" : "bg-gray-100"
-                }`}
+                className={`flex items-center gap-2 w-full px-4 py-2 rounded-lg ${theme === "dark" ? "bg-zinc-800" : "bg-gray-100"
+                  }`}
               >
                 <Search className={`w-5 h-5 ${theme === "dark" ? "text-white/50" : "text-gray-400"}`} />
                 <input
@@ -850,9 +1208,8 @@ export default function App() {
                     setShowSearchResults(e.target.value.length > 0);
                   }}
                   onFocus={() => searchQuery && setShowSearchResults(true)}
-                  className={`flex-1 bg-transparent outline-none ${
-                    theme === "dark" ? "text-white placeholder-white/50" : "text-gray-900 placeholder-gray-400"
-                  }`}
+                  className={`flex-1 bg-transparent outline-none ${theme === "dark" ? "text-white placeholder-white/50" : "text-gray-900 placeholder-gray-400"
+                    }`}
                 />
                 {searchQuery && (
                   <button
@@ -870,9 +1227,8 @@ export default function App() {
               {/* Выпадающий список результатов */}
               {showSearchResults && searchResults.length > 0 && (
                 <div
-                  className={`absolute top-full left-0 right-0 mt-2 rounded-lg shadow-2xl overflow-hidden z-50 ${
-                    theme === "dark" ? "bg-zinc-800" : "bg-white"
-                  }`}
+                  className={`absolute top-full left-0 right-0 mt-2 rounded-lg shadow-2xl overflow-hidden z-50 ${theme === "dark" ? "bg-zinc-800" : "bg-white"
+                    }`}
                 >
                   <div className="max-h-96 overflow-y-auto">
                     {searchResults.slice(0, 6).map((item) => (
@@ -883,11 +1239,10 @@ export default function App() {
                           setSearchQuery("");
                           setShowSearchResults(false);
                         }}
-                        className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors ${
-                          theme === "dark"
-                            ? "hover:bg-zinc-700 border-b border-zinc-700 last:border-b-0"
-                            : "hover:bg-gray-100 border-b border-gray-200 last:border-b-0"
-                        }`}
+                        className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors ${theme === "dark"
+                          ? "hover:bg-zinc-700 border-b border-zinc-700 last:border-b-0"
+                          : "hover:bg-gray-100 border-b border-gray-200 last:border-b-0"
+                          }`}
                       >
                         <img
                           src={item.image}
@@ -896,24 +1251,21 @@ export default function App() {
                         />
                         <div className="flex-1 min-w-0">
                           <p
-                            className={`font-medium truncate ${
-                              theme === "dark" ? "text-white" : "text-gray-900"
-                            }`}
+                            className={`font-medium truncate ${theme === "dark" ? "text-white" : "text-gray-900"
+                              }`}
                           >
                             {item.title}
                           </p>
                           <p
-                            className={`text-sm ${
-                              theme === "dark" ? "text-white/50" : "text-gray-500"
-                            }`}
+                            className={`text-sm ${theme === "dark" ? "text-white/50" : "text-gray-500"
+                              }`}
                           >
                             {item.year} • {item.genre}
                           </p>
                         </div>
                         <span
-                          className={`text-sm font-medium ${
-                            theme === "dark" ? "text-yellow-500" : "text-yellow-600"
-                          }`}
+                          className={`text-sm font-medium ${theme === "dark" ? "text-yellow-500" : "text-yellow-600"
+                            }`}
                         >
                           {item.rating}
                         </span>
@@ -921,9 +1273,8 @@ export default function App() {
                     ))}
                     {searchResults.length > 6 && (
                       <div
-                        className={`px-4 py-2 text-center text-sm ${
-                          theme === "dark" ? "text-white/50" : "text-gray-500"
-                        }`}
+                        className={`px-4 py-2 text-center text-sm ${theme === "dark" ? "text-white/50" : "text-gray-500"
+                          }`}
                       >
                         И ещё {searchResults.length - 6} результатов...
                       </div>
@@ -934,9 +1285,8 @@ export default function App() {
 
               {showSearchResults && searchQuery && searchResults.length === 0 && (
                 <div
-                  className={`absolute top-full left-0 right-0 mt-2 rounded-lg shadow-lg p-4 text-center ${
-                    theme === "dark" ? "bg-zinc-800" : "bg-white"
-                  }`}
+                  className={`absolute top-full left-0 right-0 mt-2 rounded-lg shadow-lg p-4 text-center ${theme === "dark" ? "bg-zinc-800" : "bg-white"
+                    }`}
                 >
                   <p className={theme === "dark" ? "text-white/50" : "text-gray-500"}>
                     Фильмы не найдены
@@ -949,84 +1299,23 @@ export default function App() {
               {/* Мобильный поиск */}
               <button
                 onClick={() => setShowMobileSearch(!showMobileSearch)}
-                className={`md:hidden p-2 rounded-lg ${
-                  theme === "dark"
-                    ? "bg-zinc-800 text-white/70 hover:text-white hover:bg-zinc-700"
-                    : "bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200"
-                } transition-colors`}
+                className={`md:hidden p-2 rounded-lg ${theme === "dark"
+                  ? "bg-zinc-800 text-white/70 hover:text-white hover:bg-zinc-700"
+                  : "bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200"
+                  } transition-colors`}
               >
                 <Search className="w-5 h-5" />
               </button>
 
               <button
                 onClick={toggleTheme}
-                className={`p-2 rounded-lg ${
-                  theme === "dark"
-                    ? "bg-zinc-800 text-yellow-500 hover:bg-zinc-700"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                } transition-colors`}
+                className={`p-2 rounded-lg ${theme === "dark"
+                  ? "bg-zinc-800 text-yellow-500 hover:bg-zinc-700"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  } transition-colors`}
               >
                 {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
-              
-              {currentUser ? (
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2">
-                    <div className={`w-8 h-8 rounded-full ${theme === "dark" ? "bg-yellow-500" : "bg-yellow-600"} flex items-center justify-center`}>
-                      <User className="w-5 h-5 text-black" />
-                    </div>
-                    <span className={`hidden md:block ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                      {currentUser.displayName || currentUser.email}
-                    </span>
-                  </div>
-                  <button
-                    onClick={async () => {
-                      await signOut();
-                      setCurrentUser(null);
-                    }}
-                    className={`p-2 rounded-lg ${
-                      theme === "dark"
-                        ? "bg-zinc-800 text-white/70 hover:text-white hover:bg-zinc-700"
-                        : "bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200"
-                    } transition-colors`}
-                  >
-                    <LogOut className="w-5 h-5" />
-                  </button>
-                </div>
-              ) : user ? (
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2">
-                    <div className={`w-8 h-8 rounded-full ${theme === "dark" ? "bg-yellow-500" : "bg-yellow-600"} flex items-center justify-center`}>
-                      <User className="w-5 h-5 text-black" />
-                    </div>
-                    <span className={`hidden md:block ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                      {user.name}
-                    </span>
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className={`p-2 rounded-lg ${
-                      theme === "dark"
-                        ? "bg-zinc-800 text-white/70 hover:text-white hover:bg-zinc-700"
-                        : "bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200"
-                    } transition-colors`}
-                  >
-                    <LogOut className="w-5 h-5" />
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => setShowLoginModal(true)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
-                    theme === "dark"
-                      ? "bg-yellow-500 text-black hover:bg-yellow-600"
-                      : "bg-yellow-600 text-white hover:bg-yellow-700"
-                  } transition-colors`}
-                >
-                  <LogIn className="w-5 h-5" />
-                  <span className="hidden md:inline">Войти</span>
-                </button>
-              )}
             </div>
           </div>
         </div>
@@ -1035,15 +1324,13 @@ export default function App() {
       {/* Мобильный поиск */}
       {showMobileSearch && (
         <div
-          className={`md:hidden ${
-            theme === "dark" ? "bg-zinc-900 border-zinc-800" : "bg-white border-gray-200"
-          } border-b sticky top-16 z-40 p-4`}
+          className={`md:hidden ${theme === "dark" ? "bg-zinc-900 border-zinc-800" : "bg-white border-gray-200"
+            } border-b sticky top-16 z-40 p-4`}
         >
           <div ref={searchRef} className="relative">
             <div
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
-                theme === "dark" ? "bg-zinc-800" : "bg-gray-100"
-              }`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg ${theme === "dark" ? "bg-zinc-800" : "bg-gray-100"
+                }`}
             >
               <Search className={`w-5 h-5 ${theme === "dark" ? "text-white/50" : "text-gray-400"}`} />
               <input
@@ -1056,9 +1343,8 @@ export default function App() {
                 }}
                 onFocus={() => searchQuery && setShowSearchResults(true)}
                 autoFocus
-                className={`flex-1 bg-transparent outline-none ${
-                  theme === "dark" ? "text-white placeholder-white/50" : "text-gray-900 placeholder-gray-400"
-                }`}
+                className={`flex-1 bg-transparent outline-none ${theme === "dark" ? "text-white placeholder-white/50" : "text-gray-900 placeholder-gray-400"
+                  }`}
               />
               {searchQuery && (
                 <button
@@ -1076,9 +1362,8 @@ export default function App() {
             {/* Выпадающий список результатов для мобильных */}
             {showSearchResults && searchResults.length > 0 && (
               <div
-                className={`absolute top-full left-0 right-0 mt-2 rounded-lg shadow-2xl overflow-hidden z-50 ${
-                  theme === "dark" ? "bg-zinc-800" : "bg-white"
-                }`}
+                className={`absolute top-full left-0 right-0 mt-2 rounded-lg shadow-2xl overflow-hidden z-50 ${theme === "dark" ? "bg-zinc-800" : "bg-white"
+                  }`}
               >
                 <div className="max-h-96 overflow-y-auto">
                   {searchResults.slice(0, 6).map((item) => (
@@ -1090,11 +1375,10 @@ export default function App() {
                         setShowSearchResults(false);
                         setShowMobileSearch(false);
                       }}
-                      className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors ${
-                        theme === "dark"
-                          ? "hover:bg-zinc-700 border-b border-zinc-700 last:border-b-0"
-                          : "hover:bg-gray-100 border-b border-gray-200 last:border-b-0"
-                      }`}
+                      className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors ${theme === "dark"
+                        ? "hover:bg-zinc-700 border-b border-zinc-700 last:border-b-0"
+                        : "hover:bg-gray-100 border-b border-gray-200 last:border-b-0"
+                        }`}
                     >
                       <img
                         src={item.image}
@@ -1103,24 +1387,21 @@ export default function App() {
                       />
                       <div className="flex-1 min-w-0">
                         <p
-                          className={`font-medium truncate ${
-                            theme === "dark" ? "text-white" : "text-gray-900"
-                          }`}
+                          className={`font-medium truncate ${theme === "dark" ? "text-white" : "text-gray-900"
+                            }`}
                         >
                           {item.title}
                         </p>
                         <p
-                          className={`text-sm ${
-                            theme === "dark" ? "text-white/50" : "text-gray-500"
-                          }`}
+                          className={`text-sm ${theme === "dark" ? "text-white/50" : "text-gray-500"
+                            }`}
                         >
                           {item.year} • {item.genre}
                         </p>
                       </div>
                       <span
-                        className={`text-sm font-medium ${
-                          theme === "dark" ? "text-yellow-500" : "text-yellow-600"
-                        }`}
+                        className={`text-sm font-medium ${theme === "dark" ? "text-yellow-500" : "text-yellow-600"
+                          }`}
                       >
                         {item.rating}
                       </span>
@@ -1128,9 +1409,8 @@ export default function App() {
                   ))}
                   {searchResults.length > 6 && (
                     <div
-                      className={`px-4 py-2 text-center text-sm ${
-                        theme === "dark" ? "text-white/50" : "text-gray-500"
-                      }`}
+                      className={`px-4 py-2 text-center text-sm ${theme === "dark" ? "text-white/50" : "text-gray-500"
+                        }`}
                     >
                       И ещё {searchResults.length - 6} результатов...
                     </div>
@@ -1141,9 +1421,8 @@ export default function App() {
 
             {showSearchResults && searchQuery && searchResults.length === 0 && (
               <div
-                className={`absolute top-full left-0 right-0 mt-2 rounded-lg shadow-lg p-4 text-center ${
-                  theme === "dark" ? "bg-zinc-800" : "bg-white"
-                }`}
+                className={`absolute top-full left-0 right-0 mt-2 rounded-lg shadow-lg p-4 text-center ${theme === "dark" ? "bg-zinc-800" : "bg-white"
+                  }`}
               >
                 <p className={theme === "dark" ? "text-white/50" : "text-gray-500"}>
                   Фильмы не найдены
@@ -1152,7 +1431,8 @@ export default function App() {
             )}
           </div>
         </div>
-      )}
+      )
+      }
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
@@ -1163,9 +1443,8 @@ export default function App() {
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className={`inline-block ${
-                    theme === "dark" ? "bg-yellow-500 text-black" : "bg-yellow-600 text-white"
-                  } px-4 py-2 rounded-full mb-4`}
+                  className={`inline-block ${theme === "dark" ? "bg-yellow-500 text-black" : "bg-yellow-600 text-white"
+                    } px-4 py-2 rounded-full mb-4`}
                 >
                   Шаг {currentStep + 1} из {questions.length}
                 </motion.div>
@@ -1183,11 +1462,10 @@ export default function App() {
                 {currentStep > 0 && (
                   <button
                     onClick={handleBack}
-                    className={`px-8 py-3 rounded-lg transition-colors flex items-center gap-2 ${
-                      theme === "dark"
-                        ? "bg-zinc-800 hover:bg-zinc-700 text-white"
-                        : "bg-gray-200 hover:bg-gray-300 text-gray-900"
-                    }`}
+                    className={`px-8 py-3 rounded-lg transition-colors flex items-center gap-2 ${theme === "dark"
+                      ? "bg-zinc-800 hover:bg-zinc-700 text-white"
+                      : "bg-gray-200 hover:bg-gray-300 text-gray-900"
+                      }`}
                   >
                     <ChevronLeft className="w-5 h-5" />
                     Назад
@@ -1196,11 +1474,10 @@ export default function App() {
                 <button
                   onClick={handleNext}
                   disabled={selectedGenres.length === 0}
-                  className={`px-8 py-3 rounded-lg transition-colors flex items-center gap-2 disabled:cursor-not-allowed ${
-                    theme === "dark"
-                      ? "bg-yellow-500 hover:bg-yellow-600 disabled:bg-zinc-800 text-black disabled:text-white/30"
-                      : "bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-300 text-white disabled:text-gray-500"
-                  }`}
+                  className={`px-8 py-3 rounded-lg transition-colors flex items-center gap-2 disabled:cursor-not-allowed ${theme === "dark"
+                    ? "bg-yellow-500 hover:bg-yellow-600 disabled:bg-zinc-800 text-black disabled:text-white/30"
+                    : "bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-300 text-white disabled:text-gray-500"
+                    }`}
                 >
                   {currentStep < questions.length - 1 ? "Далее" : "Показать подборку"}
                   <ChevronRight className="w-5 h-5" />
@@ -1220,26 +1497,25 @@ export default function App() {
                     {contentType === "movie"
                       ? "Рекомендуем фильмы"
                       : contentType === "series"
-                      ? "Рекомендуем сериалы"
-                      : "Рекомендуем посмотреть"}
+                        ? "Рекомендуем сериалы"
+                        : "Рекомендуем посмотреть"}
                   </h2>
                   <p className={theme === "dark" ? "text-white/60" : "text-gray-600"}>
                     Найдено {filteredContent.length}{" "}
                     {contentType === "movie"
                       ? "фильмов"
                       : contentType === "series"
-                      ? "сериалов"
-                      : "результатов"}
+                        ? "сериалов"
+                        : "результатов"}
                     {minRating > 0 && ` с рейтингом от ${minRating.toFixed(1)}`}
                   </p>
                 </div>
                 <button
                   onClick={handleBack}
-                  className={`px-6 py-3 rounded-lg transition-colors flex items-center gap-2 ${
-                    theme === "dark"
-                      ? "bg-zinc-800 hover:bg-zinc-700 text-white"
-                      : "bg-gray-200 hover:bg-gray-300 text-gray-900"
-                  }`}
+                  className={`px-6 py-3 rounded-lg transition-colors flex items-center gap-2 ${theme === "dark"
+                    ? "bg-zinc-800 hover:bg-zinc-700 text-white"
+                    : "bg-gray-200 hover:bg-gray-300 text-gray-900"
+                    }`}
                 >
                   <ChevronLeft className="w-5 h-5" />
                   Изменить предпочтения
@@ -1272,11 +1548,10 @@ export default function App() {
                       setMinRating(0);
                       handleBack();
                     }}
-                    className={`px-6 py-3 rounded-lg transition-colors ${
-                      theme === "dark"
-                        ? "bg-yellow-500 hover:bg-yellow-600 text-black"
-                        : "bg-yellow-600 hover:bg-yellow-700 text-white"
-                    }`}
+                    className={`px-6 py-3 rounded-lg transition-colors ${theme === "dark"
+                      ? "bg-yellow-500 hover:bg-yellow-600 text-black"
+                      : "bg-yellow-600 hover:bg-yellow-700 text-white"
+                      }`}
                   >
                     Сбросить фильтры
                   </button>
@@ -1297,7 +1572,7 @@ export default function App() {
               </h3>
               <p className={`text-sm ${theme === "dark" ? "text-white/60" : "text-gray-600"}`}>
                 Ваш персональный помощник в мире кино
-                
+
               </p>
               <p className={`text-sm ${theme === "dark" ? "text-white/60" : "text-gray-600"}`}>
                 Разработчик: Салимов Юсуф
@@ -1314,9 +1589,8 @@ export default function App() {
                       setContentType("movie");
                       setShowResults(true);
                     }}
-                    className={`${
-                      theme === "dark" ? "hover:text-white" : "hover:text-gray-900"
-                    } transition-colors`}
+                    className={`${theme === "dark" ? "hover:text-white" : "hover:text-gray-900"
+                      } transition-colors`}
                   >
                     Фильмы
                   </button>
@@ -1327,9 +1601,8 @@ export default function App() {
                       setContentType("series");
                       setShowResults(true);
                     }}
-                    className={`${
-                      theme === "dark" ? "hover:text-white" : "hover:text-gray-900"
-                    } transition-colors`}
+                    className={`${theme === "dark" ? "hover:text-white" : "hover:text-gray-900"
+                      } transition-colors`}
                   >
                     Сериалы
                   </button>
@@ -1337,9 +1610,8 @@ export default function App() {
                 <li>
                   <button
                     onClick={() => setShowRatingFilter(!showRatingFilter)}
-                    className={`${
-                      theme === "dark" ? "hover:text-white" : "hover:text-gray-900"
-                    } transition-colors`}
+                    className={`${theme === "dark" ? "hover:text-white" : "hover:text-gray-900"
+                      } transition-colors`}
                   >
                     Рейтинги
                   </button>
@@ -1354,9 +1626,8 @@ export default function App() {
                 <li>
                   <a
                     href="#"
-                    className={`${
-                      theme === "dark" ? "hover:text-white" : "hover:text-gray-900"
-                    } transition-colors`}
+                    className={`${theme === "dark" ? "hover:text-white" : "hover:text-gray-900"
+                      } transition-colors`}
                   >
                     О нас
                   </a>
@@ -1364,9 +1635,8 @@ export default function App() {
                 <li>
                   <a
                     href="#"
-                    className={`${
-                      theme === "dark" ? "hover:text-white" : "hover:text-gray-900"
-                    } transition-colors`}
+                    className={`${theme === "dark" ? "hover:text-white" : "hover:text-gray-900"
+                      } transition-colors`}
                   >
                     Контакты
                   </a>
@@ -1375,9 +1645,8 @@ export default function App() {
             </div>
           </div>
           <div
-            className={`mt-8 pt-8 border-t ${
-              theme === "dark" ? "border-zinc-800 text-white/40" : "border-gray-200 text-gray-500"
-            } text-center text-sm`}
+            className={`mt-8 pt-8 border-t ${theme === "dark" ? "border-zinc-800 text-white/40" : "border-gray-200 text-gray-500"
+              } text-center text-sm`}
           >
             © 2025 Cinemagic. Все права защищены.
           </div>
@@ -1385,59 +1654,15 @@ export default function App() {
       </footer>
 
       {/* Modals */}
-      {selectedContent && (
-        <MovieDetailModal
-          isOpen={!!selectedContent}
-          onClose={() => setSelectedContent(null)}
-          movie={selectedContent}
-        />
-      )}
-
-      {showLoginModal && !showSignUpModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div onClick={(e) => e.stopPropagation()} className="max-w-lg w-full flex justify-center">
-            <LoginModal
-              onSuccess={(user: any) => {
-                setShowLoginModal(false);
-                setCurrentUser(user);
-              }}
-              onSignUp={() => {
-                setShowLoginModal(false);
-                setShowSignUpModal(true);
-              }}
-            />
-          </div>
-        </div>
-      )}
-
-      {showSignUpModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div onClick={(e) => e.stopPropagation()} className="max-w-lg w-full flex justify-center">
-            <SignUpModal
-              onSuccess={(user: any) => {
-                setShowSignUpModal(false);
-                setCurrentUser(user);
-              }}
-              onBack={() => {
-                setShowSignUpModal(false);
-                setShowLoginModal(true);
-              }}
-            />
-          </div>
-        </div>
-      )}
-
-      {currentUser && (
-        <div className={`fixed bottom-4 right-4 p-4 rounded-lg ${theme === "dark" ? "bg-green-900 text-white" : "bg-green-100 text-green-900"} z-40 hidden`}>
-          <p>✓ Вы вошли как: {currentUser.email}</p>
-        </div>
-      )}
-
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        onLogin={handleLogin}
-      />
-    </div>
+      {
+        selectedContent && (
+          <MovieDetailModal
+            isOpen={!!selectedContent}
+            onClose={() => setSelectedContent(null)}
+            movie={selectedContent}
+          />
+        )
+      }
+    </div >
   );
 }

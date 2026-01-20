@@ -111,13 +111,14 @@ export function MovieDetailModal({
                   </p>
                 </div>
 
-                <button
-                  onClick={() => movie.watchUrl && window.open(movie.watchUrl, '_blank')}
-                  disabled={!movie.watchUrl}
-                  className="mt-6 w-full bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-black py-3 rounded-lg transition-colors"
+                <a
+                  href={movie.watchUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`mt-6 w-full bg-yellow-500 hover:bg-yellow-600 text-black py-3 rounded-lg transition-colors flex items-center justify-center ${!movie.watchUrl ? 'pointer-events-none opacity-50 bg-gray-400' : ''}`}
                 >
                   Смотреть
-                </button>
+                </a>
               </div>
             </div>
           </motion.div>
