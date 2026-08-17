@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { QuestionnaireStep } from "./components/QuestionnaireStep";
 import { MovieCard } from "./components/MovieCard";
 import { MovieDetailModal } from "./components/MovieDetailModal";
-import { ChevronRight, ChevronLeft, Sun, Moon, ListFilter, Search, X } from "lucide-react";
+import { ChevronRight, ChevronLeft, Sun, Moon, ListFilter, Search, X, Dices, Clapperboard } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
 // из чего состоят фильмы/сериалы
@@ -1012,28 +1012,26 @@ const allContent: Content[] = [
 
 // первый мститель
 
-const questions = [
-  {
-    id: "genres",
-    question: "Какой жанр фильмов вам нравится?",
-    multiSelect: true,
-  },
-];
-
 // Основное приложение
 export default function App() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
-  const [currentStep, setCurrentStep] = useState(0);
+  const [appState, setAppState] = useState<"hero" | "wizard" | "results">("hero");
+  const [wizardStep, setWizardStep] = useState(0);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-  const [showResults, setShowResults] = useState(false);
   const [selectedContent, setSelectedContent] = useState<Content | null>(null);
-  const [contentType, setContentType] = useState<"all" | "movie" | "series">("movie");
+  const [contentType, setContentType] = useState<"all" | "movie" | "series">("all");
   const [minRating, setMinRating] = useState<number>(0);
   const [showRatingFilter, setShowRatingFilter] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
+
+  const handleRandomMovie = () => {
+    const randomIndex = Math.floor(Math.random() * allContent.length);
+    setSelectedContent(allContent[randomIndex]);
+    setAppState("results");
+  };
 
 
 
@@ -1069,25 +1067,29 @@ export default function App() {
   };
 
   const handleNext = () => {
-    if (currentStep < questions.length - 1) {
-      setCurrentStep(currentStep + 1);
+    if (wizardStep < 2) {
+      setWizardStep(wizardStep + 1);
     } else {
-      setShowResults(true);
+      setAppState("results");
     }
   };
 
   const handleBack = () => {
-    if (showResults) {
-      setShowResults(false);
-    } else if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+    if (appState === "results") {
+      setAppState("wizard");
+    } else if (wizardStep > 0) {
+      setWizardStep(wizardStep - 1);
+    } else if (wizardStep === 0) {
+      setAppState("hero");
     }
   };
 
   const handleReset = () => {
-    setCurrentStep(0);
+    setWizardStep(0);
     setSelectedGenres([]);
-    setShowResults(false);
+    setContentType("all");
+    setMinRating(0);
+    setAppState("hero");
   };
 
   const filteredContent = allContent
@@ -1101,7 +1103,7 @@ export default function App() {
         return false;
       }
       // Фильтрация по жанрам (только если выбраны жанры)
-      if (selectedGenres.length > 0 && showResults) {
+      if (selectedGenres.length > 0 && appState === "results") {
         return item.genres.some((genre) => selectedGenres.includes(genre));
       }
       return true;
@@ -1125,9 +1127,9 @@ export default function App() {
               <button
                 onClick={() => {
                   setContentType("movie");
-                  setShowResults(true);
+                  setAppState("results");
                 }}
-                className={`${contentType === "movie" && showResults
+                className={`${contentType === "movie" && appState === "results"
                   ? theme === "dark"
                     ? "text-yellow-500"
                     : "text-yellow-600"
@@ -1141,9 +1143,9 @@ export default function App() {
               <button
                 onClick={() => {
                   setContentType("series");
-                  setShowResults(true);
+                  setAppState("results");
                 }}
-                className={`${contentType === "series" && showResults
+                className={`${contentType === "series" && appState === "results"
                   ? theme === "dark"
                     ? "text-yellow-500"
                     : "text-yellow-600"
@@ -1166,7 +1168,7 @@ export default function App() {
                 {showRatingFilter && (
                   <div
                     className={`absolute top-full right-0 mt-2 ${theme === "dark" ? "bg-zinc-800" : "bg-white"
-                      } rounded-lg shadow-xl p-4 w-64 z-50`}
+                      } rounded-lg shadow-xl p-4 w-64 z-50 border ${theme === "light" ? "border-gray-200" : "border-zinc-700"}`}
                   >
                     <label className={`block text-sm mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
                       Минимальный рейтинг: {minRating.toFixed(1)}
@@ -1178,17 +1180,23 @@ export default function App() {
                       step="0.1"
                       value={minRating}
                       onChange={(e) => setMinRating(parseFloat(e.target.value))}
-                      className="w-full"
+                      className="w-full accent-yellow-500"
                     />
                   </div>
                 )}
               </div>
               <button
-                onClick={handleReset}
-                className={`${theme === "dark" ? "text-white/70 hover:text-white" : "text-gray-600 hover:text-gray-900"
-                  } transition-colors`}
+                onClick={() => {
+                  setWizardStep(0);
+                  setAppState("wizard");
+                }}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  theme === "dark"
+                    ? "bg-zinc-800 text-white hover:bg-zinc-700"
+                    : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+                }`}
               >
-                Выбор жанров
+                Мастер подбора
               </button>
             </nav>
 
@@ -1285,17 +1293,31 @@ export default function App() {
 
               {showSearchResults && searchQuery && searchResults.length === 0 && (
                 <div
-                  className={`absolute top-full left-0 right-0 mt-2 rounded-lg shadow-lg p-4 text-center ${theme === "dark" ? "bg-zinc-800" : "bg-white"
+                  className={`absolute top-full left-0 right-0 mt-2 rounded-lg shadow-lg p-8 text-center flex flex-col items-center justify-center ${theme === "dark" ? "bg-zinc-800 border border-zinc-700" : "bg-white border border-gray-200"
                     }`}
                 >
+                  <Clapperboard className={`w-12 h-12 mb-3 ${theme === "dark" ? "text-white/20" : "text-gray-300"}`} />
                   <p className={theme === "dark" ? "text-white/50" : "text-gray-500"}>
-                    Фильмы не найдены
+                    По вашему запросу ничего не найдено
                   </p>
                 </div>
               )}
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <button
+                onClick={handleRandomMovie}
+                className={`p-2 rounded-lg ${
+                  theme === "dark"
+                    ? "bg-zinc-800 text-yellow-500 hover:bg-zinc-700 hover:text-yellow-400"
+                    : "bg-yellow-100 text-yellow-600 hover:bg-yellow-200"
+                } transition-colors flex items-center gap-2`}
+                title="Мне повезёт (Случайный фильм)"
+              >
+                <Dices className="w-5 h-5" />
+                <span className="hidden lg:inline text-sm font-medium">Мне повезёт</span>
+              </button>
+
               {/* Мобильный поиск */}
               <button
                 onClick={() => setShowMobileSearch(!showMobileSearch)}
@@ -1421,11 +1443,12 @@ export default function App() {
 
             {showSearchResults && searchQuery && searchResults.length === 0 && (
               <div
-                className={`absolute top-full left-0 right-0 mt-2 rounded-lg shadow-lg p-4 text-center ${theme === "dark" ? "bg-zinc-800" : "bg-white"
+                className={`absolute top-full left-0 right-0 mt-2 rounded-lg shadow-lg p-8 text-center flex flex-col items-center justify-center ${theme === "dark" ? "bg-zinc-800 border border-zinc-700" : "bg-white border border-gray-200"
                   }`}
               >
+                <Clapperboard className={`w-12 h-12 mb-3 ${theme === "dark" ? "text-white/20" : "text-gray-300"}`} />
                 <p className={theme === "dark" ? "text-white/50" : "text-gray-500"}>
-                  Фильмы не найдены
+                  По вашему запросу ничего не найдено
                 </p>
               </div>
             )}
@@ -1435,56 +1458,139 @@ export default function App() {
       }
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-12 min-h-[70vh] flex flex-col justify-center">
         <AnimatePresence mode="wait">
-          {!showResults ? (
-            <div key="questionnaire" className="space-y-8">
+          {appState === "hero" && (
+            <motion.div
+              key="hero"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="text-center max-w-3xl mx-auto py-20"
+            >
+              <h1 className={`text-5xl md:text-7xl font-bold mb-6 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                Найди идеальный фильм <span className="text-yellow-500">на вечер</span>
+              </h1>
+              <p className={`text-xl mb-12 ${theme === "dark" ? "text-white/60" : "text-gray-600"}`}>
+                Ответьте на пару простых вопросов, и мы подберем для вас кино или сериал, которые точно подойдут под ваше настроение.
+              </p>
+              <button
+                onClick={() => setAppState("wizard")}
+                className="bg-yellow-500 hover:bg-yellow-600 text-black text-lg font-semibold px-10 py-5 rounded-full transition-transform hover:scale-105 shadow-lg shadow-yellow-500/20"
+              >
+                Подобрать фильм
+              </button>
+            </motion.div>
+          )}
+
+          {appState === "wizard" && (
+            <motion.div key="wizard" className="space-y-8 max-w-4xl mx-auto w-full"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+            >
               <div className="text-center mb-8">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
+                <div
                   className={`inline-block ${theme === "dark" ? "bg-yellow-500 text-black" : "bg-yellow-600 text-white"
-                    } px-4 py-2 rounded-full mb-4`}
+                    } px-4 py-2 rounded-full mb-4 font-medium shadow-md`}
                 >
-                  Шаг {currentStep + 1} из {questions.length}
-                </motion.div>
+                  Шаг {wizardStep + 1} из 3
+                </div>
               </div>
 
-              <QuestionnaireStep
-                question={questions[currentStep].question}
-                options={genreOptions}
-                selectedOptions={selectedGenres}
-                onToggleOption={handleToggleGenre}
-                multiSelect={questions[currentStep].multiSelect}
-              />
+              {wizardStep === 0 && (
+                <div className="text-center space-y-8">
+                  <h2 className={`text-2xl md:text-3xl font-semibold ${theme === "dark" ? "text-white" : "text-gray-900"}`}>Что вы хотите посмотреть?</h2>
+                  <div className="flex flex-col sm:flex-row justify-center gap-4">
+                    {[
+                      { id: "movie", label: "Фильмы", icon: "🎬" },
+                      { id: "series", label: "Сериалы", icon: "📺" },
+                      { id: "all", label: "Всё равно", icon: "🎲" }
+                    ].map(type => (
+                      <button
+                        key={type.id}
+                        onClick={() => setContentType(type.id as any)}
+                        className={`flex-1 p-8 rounded-2xl border-2 transition-all ${
+                          contentType === type.id
+                            ? "border-yellow-500 bg-yellow-500/10"
+                            : theme === "dark"
+                              ? "border-zinc-800 bg-zinc-900 hover:border-zinc-700"
+                              : "border-gray-200 bg-white hover:border-gray-300"
+                        }`}
+                      >
+                        <div className="text-4xl mb-4">{type.icon}</div>
+                        <div className={`text-xl font-medium ${theme === "dark" ? "text-white" : "text-gray-900"}`}>{type.label}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-              <div className="flex justify-center gap-4 mt-12">
-                {currentStep > 0 && (
-                  <button
-                    onClick={handleBack}
-                    className={`px-8 py-3 rounded-lg transition-colors flex items-center gap-2 ${theme === "dark"
-                      ? "bg-zinc-800 hover:bg-zinc-700 text-white"
-                      : "bg-gray-200 hover:bg-gray-300 text-gray-900"
-                      }`}
-                  >
-                    <ChevronLeft className="w-5 h-5" />
-                    Назад
-                  </button>
-                )}
+              {wizardStep === 1 && (
+                <QuestionnaireStep
+                  question="Какой жанр фильмов вам нравится?"
+                  options={genreOptions}
+                  selectedOptions={selectedGenres}
+                  onToggleOption={handleToggleGenre}
+                  multiSelect={true}
+                />
+              )}
+
+              {wizardStep === 2 && (
+                <div className="text-center space-y-12 py-10 max-w-2xl mx-auto">
+                  <h2 className={`text-2xl md:text-3xl font-semibold ${theme === "dark" ? "text-white" : "text-gray-900"}`}>Минимальный рейтинг</h2>
+                  <p className={theme === "dark" ? "text-white/60" : "text-gray-600"}>Показывать только фильмы и сериалы с рейтингом не ниже выбранного</p>
+                  
+                  <div className="relative pt-8">
+                    <div className={`text-6xl font-bold text-yellow-500 mb-8`}>{minRating.toFixed(1)}</div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="10"
+                      step="0.1"
+                      value={minRating}
+                      onChange={(e) => setMinRating(parseFloat(e.target.value))}
+                      className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-yellow-500"
+                    />
+                    <div className={`flex justify-between mt-2 text-sm font-medium ${theme === "dark" ? "text-white/40" : "text-gray-400"}`}>
+                      <span>Любой (0.0)</span>
+                      <span>Только шедевры (10.0)</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Fixed Bottom Navigation for Mobile, Normal on Desktop */}
+              <div className={`flex justify-center gap-4 mt-12 fixed bottom-0 left-0 right-0 p-4 md:static md:p-0 z-30 ${
+                theme === "dark" ? "bg-zinc-950/90 md:bg-transparent" : "bg-white/90 md:bg-transparent"
+              } backdrop-blur-md md:backdrop-blur-none border-t md:border-t-0 ${theme === "dark" ? "border-zinc-800" : "border-gray-200"}`}>
+                <button
+                  onClick={handleBack}
+                  className={`px-8 py-4 md:py-3 rounded-lg transition-colors flex items-center gap-2 font-medium ${theme === "dark"
+                    ? "bg-zinc-800 hover:bg-zinc-700 text-white"
+                    : "bg-gray-200 hover:bg-gray-300 text-gray-900"
+                    }`}
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                  Назад
+                </button>
                 <button
                   onClick={handleNext}
-                  disabled={selectedGenres.length === 0}
-                  className={`px-8 py-3 rounded-lg transition-colors flex items-center gap-2 disabled:cursor-not-allowed ${theme === "dark"
+                  disabled={wizardStep === 1 && selectedGenres.length === 0}
+                  className={`flex-1 md:flex-none px-8 py-4 md:py-3 rounded-lg transition-colors flex items-center justify-center gap-2 font-medium disabled:cursor-not-allowed ${theme === "dark"
                     ? "bg-yellow-500 hover:bg-yellow-600 disabled:bg-zinc-800 text-black disabled:text-white/30"
                     : "bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-300 text-white disabled:text-gray-500"
                     }`}
                 >
-                  {currentStep < questions.length - 1 ? "Далее" : "Показать подборку"}
+                  {wizardStep < 2 ? "Далее" : "Показать подборку"}
                   <ChevronRight className="w-5 h-5" />
                 </button>
               </div>
-            </div>
-          ) : (
+              <div className="h-20 md:hidden"></div> {/* Spacer for fixed bottom bar on mobile */}
+            </motion.div>
+          )}
+
+          {appState === "results" && (
             <motion.div
               key="results"
               initial={{ opacity: 0 }}
@@ -1493,7 +1599,7 @@ export default function App() {
             >
               <div className="mb-8 flex items-center justify-between flex-wrap gap-4">
                 <div>
-                  <h2 className={theme === "dark" ? "text-white" : "text-gray-900"}>
+                  <h2 className={`text-2xl font-bold ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
                     {contentType === "movie"
                       ? "Рекомендуем фильмы"
                       : contentType === "series"
@@ -1512,13 +1618,13 @@ export default function App() {
                 </div>
                 <button
                   onClick={handleBack}
-                  className={`px-6 py-3 rounded-lg transition-colors flex items-center gap-2 ${theme === "dark"
+                  className={`px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2 ${theme === "dark"
                     ? "bg-zinc-800 hover:bg-zinc-700 text-white"
                     : "bg-gray-200 hover:bg-gray-300 text-gray-900"
                     }`}
                 >
                   <ChevronLeft className="w-5 h-5" />
-                  Изменить предпочтения
+                  Изменить параметры
                 </button>
               </div>
 
@@ -1533,6 +1639,8 @@ export default function App() {
                     image={item.image}
                     duration={item.duration}
                     country={item.country}
+                    type={item.type}
+                    theme={theme}
                     onClick={() => setSelectedContent(item)}
                   />
                 ))}
@@ -1540,21 +1648,33 @@ export default function App() {
 
               {filteredContent.length === 0 && (
                 <div className="text-center py-20">
-                  <p className={`mb-4 ${theme === "dark" ? "text-white/60" : "text-gray-600"}`}>
-                    К сожалению, результатов с выбранными фильтрами не найдено
+                  <div className="flex justify-center mb-6">
+                    <Clapperboard className={`w-20 h-20 ${theme === "dark" ? "text-white/10" : "text-gray-200"}`} />
+                  </div>
+                  <p className={`mb-6 text-lg ${theme === "dark" ? "text-white/60" : "text-gray-600"}`}>
+                    К сожалению, по выбранным фильтрам ничего не найдено
                   </p>
-                  <button
-                    onClick={() => {
-                      setMinRating(0);
-                      handleBack();
-                    }}
-                    className={`px-6 py-3 rounded-lg transition-colors ${theme === "dark"
-                      ? "bg-yellow-500 hover:bg-yellow-600 text-black"
-                      : "bg-yellow-600 hover:bg-yellow-700 text-white"
-                      }`}
-                  >
-                    Сбросить фильтры
-                  </button>
+                  <div className="flex justify-center gap-4">
+                    <button
+                      onClick={() => {
+                        setMinRating(0);
+                        setSelectedGenres([]);
+                      }}
+                      className={`px-6 py-3 rounded-lg font-medium transition-colors ${theme === "dark"
+                        ? "bg-zinc-800 hover:bg-zinc-700 text-white"
+                        : "bg-gray-200 hover:bg-gray-300 text-gray-900"
+                        }`}
+                    >
+                      Сбросить фильтры
+                    </button>
+                    <button
+                      onClick={handleRandomMovie}
+                      className="px-6 py-3 rounded-lg font-medium bg-yellow-500 hover:bg-yellow-600 text-black transition-colors flex items-center gap-2"
+                    >
+                      <Dices className="w-5 h-5" />
+                      Случайный выбор
+                    </button>
+                  </div>
                 </div>
               )}
             </motion.div>
@@ -1567,19 +1687,18 @@ export default function App() {
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className={`mb-4 ${theme === "dark" ? "text-yellow-500" : "text-yellow-600"}`}>
+              <h3 className={`mb-4 font-bold ${theme === "dark" ? "text-yellow-500" : "text-yellow-600"}`}>
                 Cinemagic
               </h3>
-              <p className={`text-sm ${theme === "dark" ? "text-white/60" : "text-gray-600"}`}>
+              <p className={`text-sm mb-2 ${theme === "dark" ? "text-white/60" : "text-gray-600"}`}>
                 Ваш персональный помощник в мире кино
-
               </p>
               <p className={`text-sm ${theme === "dark" ? "text-white/60" : "text-gray-600"}`}>
                 Разработчик: Салимов Юсуф
               </p>
             </div>
             <div>
-              <h4 className={`mb-4 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+              <h4 className={`mb-4 font-semibold ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
                 Разделы
               </h4>
               <ul className={`space-y-2 text-sm ${theme === "dark" ? "text-white/60" : "text-gray-600"}`}>
@@ -1587,7 +1706,7 @@ export default function App() {
                   <button
                     onClick={() => {
                       setContentType("movie");
-                      setShowResults(true);
+                      setAppState("results");
                     }}
                     className={`${theme === "dark" ? "hover:text-white" : "hover:text-gray-900"
                       } transition-colors`}
@@ -1599,7 +1718,7 @@ export default function App() {
                   <button
                     onClick={() => {
                       setContentType("series");
-                      setShowResults(true);
+                      setAppState("results");
                     }}
                     className={`${theme === "dark" ? "hover:text-white" : "hover:text-gray-900"
                       } transition-colors`}
@@ -1619,7 +1738,7 @@ export default function App() {
               </ul>
             </div>
             <div>
-              <h4 className={`mb-4 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+              <h4 className={`mb-4 font-semibold ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
                 О проекте
               </h4>
               <ul className={`space-y-2 text-sm ${theme === "dark" ? "text-white/60" : "text-gray-600"}`}>
@@ -1659,10 +1778,11 @@ export default function App() {
           <MovieDetailModal
             isOpen={!!selectedContent}
             onClose={() => setSelectedContent(null)}
+            theme={theme}
             movie={selectedContent}
           />
         )
       }
-    </div >
+    </div>
   );
 }
